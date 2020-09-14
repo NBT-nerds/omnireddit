@@ -10,12 +10,18 @@ from utils.util import getConfig
 
 class Omnireddit(commands.AutoShardedBot):
     def __init__(self):
+<<<<<<< HEAD
         super().__init__(command_prefix="r/")
         self.load_cogs()
+=======
+        super().__init__(command_prefix="reddit.")
+>>>>>>> b483eec032f39492706d864432085c2ca178fbfb
         self.config = getConfig()
         self.reddit = praw.Reddit(client_id=self.config["reddit"]["client_id"],
                      client_secret=self.config["reddit"]["client_secret"],
                      user_agent=self.config["reddit"]["user_agent"])
+
+        self.load_cogs()
 
     def load_cogs(self):
         for file in os.listdir("cogs"):
