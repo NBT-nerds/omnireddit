@@ -3,6 +3,7 @@ import discord
 import os
 from loguru import logger
 import traceback
+import praw
 
 from utils.util import getConfig
 
@@ -12,6 +13,9 @@ class Omnireddit(commands.AutoShardedBot):
         super().__init__(command_prefix="reddit.")
         self.load_cogs()
         self.config = getConfig()
+        self.reddit = praw.Reddit(client_id=self.config["reddit"]["client_id"],
+                     client_secret=self.config["reddit"]["client_secret"],
+                     user_agent=self.config["reddit"]["user_agent"])
 
     def load_cogs(self):
         for file in os.listdir("cogs"):
