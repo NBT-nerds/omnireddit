@@ -4,5 +4,16 @@
         "client_id": "",
         "client_secret": "",
         "user_agent": ""
-    }
+    },
+    "support_guild": {
+        "id": 0,
+        "suggestion_channel": 0
+    },
+    "owners": [
+        0
+    ],
+    "staff_role": 0,
+    "footer_text_list": [
+        ""
+    ]
 }
