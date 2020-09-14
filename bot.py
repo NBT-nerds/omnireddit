@@ -10,12 +10,9 @@ from utils.util import getConfig
 
 class Omnireddit(commands.AutoShardedBot):
     def __init__(self):
-<<<<<<< HEAD
         super().__init__(command_prefix="r/")
-        self.load_cogs()
-=======
-        super().__init__(command_prefix="reddit.")
->>>>>>> b483eec032f39492706d864432085c2ca178fbfb
+        self.load_cogs().
+
         self.config = getConfig()
         self.reddit = praw.Reddit(client_id=self.config["reddit"]["client_id"],
                      client_secret=self.config["reddit"]["client_secret"],
@@ -65,6 +62,9 @@ class Omnireddit(commands.AutoShardedBot):
         traceback_lines = traceback.format_exception(type(exception), exception, exception.__traceback__)
         logger.exception("".join(traceback_lines))
         logger.exception(exception)
+    
+    async def test(ctx):
+        await ctx.send('test')
 
 
 if __name__ == "__main__":
