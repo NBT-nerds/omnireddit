@@ -14,7 +14,7 @@ class Misc(commands.Cog):
         msg = await self.bot.get_guild(self.bot.config["support_guild"]["id"]).get_channel(self.bot.config["support_guild"]["suggestion_channel"]).send(embed=embed)
         await msg.add_reaction("✅")
         await msg.add_reaction("❎")
-        await ctx.send("Suggestion logged!")
+        await ctx.send(f'"{ctx.author.mention}Suggestion logged!")
 
 
 def setup(bot):
