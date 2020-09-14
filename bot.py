@@ -62,9 +62,6 @@ class Omnireddit(commands.AutoShardedBot):
         traceback_lines = traceback.format_exception(type(exception), exception, exception.__traceback__)
         logger.exception("".join(traceback_lines))
         logger.exception(exception)
-    
-    async def test(ctx):
-        await ctx.send('test')
 
 
 if __name__ == "__main__":
