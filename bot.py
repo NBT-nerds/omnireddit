@@ -10,7 +10,7 @@ from utils.util import getConfig
 
 class Omnireddit(commands.AutoShardedBot):
     def __init__(self):
-        super().__init__(command_prefix="reddit.")
+        super().__init__(command_prefix="r/")
         self.load_cogs()
         self.config = getConfig()
         self.reddit = praw.Reddit(client_id=self.config["reddit"]["client_id"],
