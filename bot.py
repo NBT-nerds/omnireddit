@@ -3,6 +3,7 @@ import discord
 import os
 from loguru import logger
 import traceback
+import prawcore
 import praw
 
 from utils.util import getConfig
@@ -11,7 +12,6 @@ from utils.util import getConfig
 class Omnireddit(commands.AutoShardedBot):
     def __init__(self):
         super().__init__(command_prefix="r/")
-        self.load_cogs().
 
         self.config = getConfig()
         self.reddit = praw.Reddit(client_id=self.config["reddit"]["client_id"],
@@ -59,6 +59,8 @@ class Omnireddit(commands.AutoShardedBot):
                     pass
                 logger.exception(exception)
                 return await ctx.send("An unknown error occurred. Please report this to the devs.")
+            if isinstance(exception.original, prawcore.exceptions.Redirect):
+                return await ctx.send("That subreddit could not be found")
         traceback_lines = traceback.format_exception(type(exception), exception, exception.__traceback__)
         logger.exception("".join(traceback_lines))
         logger.exception(exception)
