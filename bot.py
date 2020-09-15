@@ -46,6 +46,8 @@ class Omnireddit(commands.AutoShardedBot):
             # return await ctx.invoke(self.get_command("help show_command"), arg=ctx.command)
         if isinstance(exception, commands.BadArgument):
             return await ctx.send(f"This is an invalid argument.\n`{exception}`")
+        if isinstance(exception, commands.NSFWChannelRequired):
+            return await ctx.send("This must be in an NSFW-channel")
         if isinstance(exception, commands.CheckFailure):
             return await ctx.send("It seems like you do not have permissions to run this.")
         if isinstance(exception, commands.TooManyArguments):

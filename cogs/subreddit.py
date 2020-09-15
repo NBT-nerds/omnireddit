@@ -14,6 +14,8 @@ class Subreddit(commands.Cog):
         name = name.lower().replace('r/', '')
         await ctx.trigger_typing()
         sub = self.bot.reddit.subreddit(name)
+        if sub.over18 and not ctx.channel.is_nsfw():
+            raise commands.NSFWChannelRequired(ctx.channel)
         embeds = []
         for submission in sub.new(limit=6):
             embed = discord.Embed(title=submission.title, description=submission.selftext, color=discord.Color.green(), url=f"http://reddit.com{submission.permalink}")
