@@ -1,8 +1,9 @@
 from discord.ext import commands
 import discord
-from EZPaginator import Paginator
+from utils.paginator import Paginator
 import praw
 from praw import models
+from utils import redditutils
 
 class Subreddit(commands.Cog):
 
@@ -18,20 +19,17 @@ class Subreddit(commands.Cog):
             raise commands.NSFWChannelRequired(ctx.channel)
         embeds = []
         for submission in sub.new(limit=6):
-            embed = discord.Embed(title=submission.title, description=submission.selftext, color=discord.Color.green(), url=f"http://reddit.com{submission.permalink}")
-            embed.set_author(name=submission.author.name, icon_url=submission.author.icon_img)
-            if not submission.selftext:
-                embed.set_image(url=submission.url)
-            embeds.append(embed)
-        for i, embed in enumerate(embeds):
-            embed.set_footer(text=f"page {i + 1} of {len(embeds)}")
+            if embed := redditutils.format_submission_embed(submission):
+                embeds.append(embed)
+        if not embeds:
+            return await ctx.send(embed=discord.Embed(title="no results :(", color=discord.Color.red()))
         msg = await ctx.send(embed=embeds[0])
-        pages = Paginator(self.bot, msg, embeds=embeds, timeout=60, use_more=True, only=ctx.author)
+        pages = Paginator(self.bot, msg, embeds=embeds, timeout=60, use_more=True, only=ctx.author).set_page_footers()
         await pages.start()
 
         
-    @commands.command(name="search", description="Search for a subreddit.", usage="<keyword>")
-    async def search(self, ctx, term: str):
+    @commands.command(name="searchSubreddit", description="Search for a subreddit.", usage="<keyword>")
+    async def searchSubreddit(self, ctx, term: str):
         await ctx.trigger_typing()
         term = term.lower().replace('r/', '')
         subs = models.Subreddits(self.bot.reddit, None).search_by_name(query=term)
