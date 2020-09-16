@@ -9,7 +9,7 @@ class Subreddit(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(name="subreddit", description="Get the 6 newest posts from a specific subreddit", aliases=["sub"], usage=["<subreddit name>"])
     async def subreddit(self, ctx, *, name: str):
         name = name.lower().replace('r/', '')
         await ctx.trigger_typing()
@@ -30,13 +30,13 @@ class Subreddit(commands.Cog):
         await pages.start()
 
         
-    @commands.command()
+    @commands.command(name="search", description="Search for a subreddit.", usage="<keyword>")
     async def search(self, ctx, term: str):
         await ctx.trigger_typing()
         term = term.lower().replace('r/', '')
         subs = models.Subreddits(self.bot.reddit, None).search_by_name(query=term)
         string = "\n\n".join([f"[r/{z.display_name}](https://reddit.com/r/{z.display_name}) {':underage:' if z.over18 else ''}" for z in subs])
-        await ctx.send(embed=discord.Embed(title=f"search results for {term}", description=string, color=discord.Color.green()))
+        await ctx.send(embed=discord.Embed(title=f"search results for {term}" if string else f"No results for {term}", description=string, color=discord.Color.green() if string else discord.Color.red()))
         
 
 

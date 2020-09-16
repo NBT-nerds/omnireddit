@@ -8,7 +8,7 @@ class RedditMisc(commands.Cog):
     def __init__(self, bot):
         self.bot: commands.Bot = bot
 
-    @commands.command()
+    @commands.command(name="user", description="Get some info about a specific redditor", aliases=["redditor"], usage="<username>")
     async def user(self, ctx: commands.Context, *, name: str):
         redditor = self.bot.reddit.redditor(name.lower().replace('u/', ''))
         embed = discord.Embed(description="**Created at: **{}".format(datetime.fromtimestamp(redditor.created_utc).strftime("%d/%m/%Y, %H:%M:%S")), color=(discord.Color.gold() if redditor.is_gold else discord.Color.darker_grey())).set_author(name=redditor.name, icon_url=redditor.icon_img)

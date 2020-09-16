@@ -8,7 +8,7 @@ class Misc(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(name="suggest", description="log a suggestion for the bot. Join the support server to see its popularity!", aliases=["suggestion"], usage="<suggestion>")
     async def suggest(self, ctx, *, suggestion: str):
         embed = Embed(ctx, description=suggestion).author().random_footer()
         msg = await self.bot.get_guild(self.bot.config["support_guild"]["id"]).get_channel(self.bot.config["support_guild"]["suggestion_channel"]).send(embed=embed)
