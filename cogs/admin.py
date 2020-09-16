@@ -21,6 +21,7 @@ class Admin(commands.Cog):
                 except commands.ExtensionNotLoaded:
                     self.bot.load_extension(f"cogs.{filename[:-3]}")
                     logger.info(f"loaded cogs.{filename[:-3]}")
+        logger.info("Cogs reloaded, bot ready")
         await ctx.message.add_reaction("👌")
 
     @commands.command()
