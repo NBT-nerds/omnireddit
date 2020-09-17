@@ -32,6 +32,7 @@ class Misc(commands.Cog):
                           description=f"Use `{ctx.prefix}help <command | category>` for more info",
                           ).random_footer()
             for cogName in self.bot.cogs:
+                if cogName.lower() in self.bot.hidden_cogs: continue
                 cog = self.bot.get_cog(cogName)
                 string = ""
                 for command in cog.get_commands():
