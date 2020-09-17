@@ -5,16 +5,22 @@ from datetime import datetime
 from utils.paginator import Paginator
 from utils import redditutils
 
+
 class RedditMisc(commands.Cog):
 
     def __init__(self, bot):
         self.bot: commands.Bot = bot
 
-    @commands.command(name="user", description="Get some info about a specific redditor", aliases=["redditor"], usage="<username>")
+    @commands.command(name="user", description="Get some info about a specific redditor", aliases=["redditor"],
+                      usage="<username>")
     async def user(self, ctx: commands.Context, *, name: str):
         redditor = self.bot.reddit.redditor(name.lower().replace('u/', ''))
-        embed = discord.Embed(description="**Created at: **{}".format(datetime.fromtimestamp(redditor.created_utc).strftime("%d/%m/%Y, %H:%M:%S")), color=(discord.Color.gold() if redditor.is_gold else discord.Color.darker_grey())).set_author(name=redditor.name, icon_url=redditor.icon_img)
-        embed.add_field(name=f"Karma: {redditor.comment_karma + redditor.link_karma}", value=f"Comment Karma: {redditor.comment_karma}\nLink Karma: {redditor.link_karma}")
+        embed = discord.Embed(description="**Created at: **{}".format(
+            datetime.fromtimestamp(redditor.created_utc).strftime("%d/%m/%Y, %H:%M:%S")), color=(
+            discord.Color.gold() if redditor.is_gold else discord.Color.darker_grey())).set_author(name=redditor.name,
+                                                                                                   icon_url=redditor.icon_img)
+        embed.add_field(name=f"Karma: {redditor.comment_karma + redditor.link_karma}",
+                        value=f"Comment Karma: {redditor.comment_karma}\nLink Karma: {redditor.link_karma}")
         await ctx.send(embed=embed)
 
     @commands.command()
@@ -22,7 +28,7 @@ class RedditMisc(commands.Cog):
         await ctx.send("⇧")
 
     @commands.command(name="searchPost", description="Search for a post.", usage="<keyword>")
-    async def searchPost(self, ctx, *, query:str):
+    async def searchPost(self, ctx, *, query: str):
         await ctx.trigger_typing()
         sub = self.bot.reddit.subreddit("all")
         embeds = []

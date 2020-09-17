@@ -12,6 +12,7 @@ from utils.util import getConfig
 class Omnireddit(commands.AutoShardedBot):
     def __init__(self):
         super().__init__(command_prefix="r/", case_insensitive=True)
+        self.remove_command("help")
 
         self.config = getConfig()
         self.reddit = praw.Reddit(client_id=self.config["reddit"]["client_id"],
