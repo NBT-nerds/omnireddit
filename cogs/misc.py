@@ -16,6 +16,18 @@ class Misc(commands.Cog):
         await msg.add_reaction("❎")
         await ctx.send(f"{ctx.author.mention}, Suggestion logged!")
 
+    @commands.command(name="help",description="get a list of all the commands in the bot",usage="<command>")
+    async def help(self,ctx):
+        embed = discord.Embed(color=0x0080ff).set_author
+        (name=ctx.author,icon_url=ctx.author.avatar_url).add_field
+        (name="Admin Commands",value="reload,reload_config",inline=False).add_field
+        (name="Reddit Commands",value="searchpost,searchsubreddit,subreddit,user")
+        (name="Misc",value="help,prefix,suggest")
+        await ctx.send(embed=embed)
+    
+    @commands.command(name="prefix",description="changes/checks prefix of bot",usage="<prefix>")
+    async def prefix(self, ctx,*, prefix):
+        pass
 
 def setup(bot):
     bot.add_cog(Misc(bot))
