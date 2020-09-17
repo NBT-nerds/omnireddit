@@ -23,10 +23,6 @@ class RedditMisc(commands.Cog):
                         value=f"Comment Karma: {redditor.comment_karma}\nLink Karma: {redditor.link_karma}")
         await ctx.send(embed=embed)
 
-    @commands.command()
-    async def test(self, ctx):
-        await ctx.send("⇧")
-
     @commands.command(name="searchPost", description="Search for a post.", usage="<keyword>")
     async def searchPost(self, ctx, *, query: str):
         await ctx.trigger_typing()
