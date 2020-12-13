@@ -3,8 +3,8 @@ import discord
 import os
 from loguru import logger
 import traceback
-import prawcore
-import praw
+import asyncprawcore
+import asyncpraw
 
 from utils.util import getConfig
 
@@ -16,9 +16,9 @@ class Omnireddit(commands.AutoShardedBot):
         self.hidden_cogs = ["admin"]
 
         self.config = getConfig()
-        self.reddit = praw.Reddit(client_id=self.config["reddit"]["client_id"],
-                                  client_secret=self.config["reddit"]["client_secret"],
-                                  user_agent=self.config["reddit"]["user_agent"])
+        self.reddit = asyncpraw.Reddit(client_id=self.config["reddit"]["client_id"],
+                                       client_secret=self.config["reddit"]["client_secret"],
+                                       user_agent=self.config["reddit"]["user_agent"])
 
         self.load_cogs()
 
@@ -48,8 +48,8 @@ class Omnireddit(commands.AutoShardedBot):
         if isinstance(exception, commands.MissingRequiredArgument):
             # await ctx.send("You are Missing required arguments!", delete_after=7)
             return await ctx.send(embed=discord.Embed(title="Invalid usage!",
-                                               description=f"Correct usage: `{ctx.prefix}{ctx.command.name} {ctx.command.usage}`",
-                                               color=discord.Color.red()))
+                                                      description=f"Correct usage: `{ctx.prefix}{ctx.command.name} {ctx.command.usage}`",
+                                                      color=discord.Color.red()))
             # return await ctx.invoke(self.get_command("help show_command"), arg=ctx.command)
         if isinstance(exception, commands.BadArgument):
             return await ctx.send(f"This is an invalid argument.\n`{exception}`")
@@ -69,9 +69,9 @@ class Omnireddit(commands.AutoShardedBot):
                     pass
                 logger.exception(exception)
                 return await ctx.send("An unknown error occurred. Please report this to the devs.")
-            if isinstance(exception.original, prawcore.exceptions.Redirect):
+            if isinstance(exception.original, asyncprawcore.exceptions.Redirect):
                 return await ctx.send("That subreddit could not be found")
-            if isinstance(exception.original, prawcore.exceptions.NotFound):
+            if isinstance(exception.original, asyncprawcore.exceptions.NotFound):
                 return await ctx.send("I couldn't find anything for that :(")
         traceback_lines = traceback.format_exception(type(exception), exception, exception.__traceback__)
         logger.exception("".join(traceback_lines))

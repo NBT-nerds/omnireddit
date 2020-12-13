@@ -1,9 +1,9 @@
 from discord.ext import commands
 import discord
 from utils.paginator import Paginator
-import praw
-from praw import models
+from asyncpraw import models
 from utils import redditutils
+import asyncio
 
 
 class Subreddits(commands.Cog):
@@ -16,16 +16,16 @@ class Subreddits(commands.Cog):
     async def subreddit(self, ctx, *, name: str):
         name = name.lower().replace('r/', '')
         await ctx.trigger_typing()
-        sub = self.bot.reddit.subreddit(name)
+        sub = await self.bot.reddit.subreddit(name, fetch=True)
         if sub.over18 and not ctx.channel.is_nsfw():
             raise commands.NSFWChannelRequired(ctx.channel)
         embeds = []
-        for submission in sub.new(limit=6):
-            if embed := redditutils.format_submission_embed(submission):
+        async for submission in sub.new(limit=6):
+            if embed := await redditutils.format_submission_embed(submission):
                 embeds.append(embed)
         if not embeds:
             return await ctx.send(embed=discord.Embed(title="no results :(", color=discord.Color.red()))
-        msg = await ctx.send(embed=embeds[0])
+        msg = await ctx.send(embed=embeds[0].set_footer(text=f"page 1 of {len(embeds)}"))
         pages = Paginator(self.bot, msg, embeds=embeds, timeout=60, use_more=True, only=ctx.author).set_page_footers()
         await pages.start()
 
@@ -33,11 +33,15 @@ class Subreddits(commands.Cog):
     async def searchSubreddit(self, ctx, term: str):
         await ctx.trigger_typing()
         term = term.lower().replace('r/', '')
-        subs = models.Subreddits(self.bot.reddit, None).search_by_name(query=term)
+        subs = [z async for z in models.Subreddits(self.bot.reddit, None).search_by_name(query=term)]
+        tasks = []
+        for sub in subs:
+            tasks.append(asyncio.create_task(sub.load()))
+        await asyncio.gather(*tasks)
         string = "\n\n".join(
             [f"[r/{z.display_name}](https://reddit.com/r/{z.display_name}) {':underage:' if z.over18 else ''}" for z in
              subs])
-        await ctx.send(embed=discord.Embed(title=f"search results for {term}" if string else f"No results for {term}",
+        await ctx.send(embed=discord.Embed(title=f"search results for \"{term}\"" if string else f"No results for {term}",
                                            description=string,
                                            color=discord.Color.green() if string else discord.Color.red()))
 
